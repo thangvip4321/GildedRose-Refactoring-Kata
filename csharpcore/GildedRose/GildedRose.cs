@@ -32,14 +32,15 @@ public class GildedRose
             item.SellIn--;
         }
 
+
         var qualityChange = 0;
         switch (item.Name)
         {
             case AGED_BRIE:
-                qualityChange = IsExpired(item) ? 2 : 1;
+                qualityChange = item.IsExpired ? 2 : 1;
                 break;
             case BACKSTAGE_PASS:
-                if (IsExpired(item)) qualityChange = -item.Quality;
+                if (item.IsExpired) qualityChange = -item.Quality;
                 else if (item.SellIn < 5)
                     qualityChange = 3;
                 else if (item.SellIn < 10)
@@ -50,18 +51,13 @@ public class GildedRose
             case SULFURAS:
                 break;
             case CONJURED_ITEM:
-                qualityChange = IsExpired(item) ? -4 : -2;
+                qualityChange = item.IsExpired ? -4 : -2;
                 break;
             default:
-                qualityChange = IsExpired(item)? -2: -1;
+                qualityChange = item.IsExpired ? -2: -1;
                 break;
         }
         IncreaseQuality(item, qualityChange);
-    }
-
-    private static bool IsExpired(Item item)
-    {
-        return item.SellIn < 0;
     }
 
     /// <summary>
@@ -75,8 +71,15 @@ public class GildedRose
         item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
     }
 
-    interface ItemUpdater{
+    class ItemUpdater{
+        protected
          void UpdateSellIn(Item item);
          void UpdateQuality(Item item);
+    }
+    class DefaultUpdater {
+        
+        void UpdateSellIn(Item item){
+            item.Quality
+        }
     }
 }

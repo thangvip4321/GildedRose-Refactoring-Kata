@@ -25,7 +25,7 @@ public class GildedRose
         }
     }
 
-    private BaseItemUpdater GetRightItemUpdater(Item item)
+    private static BaseItemUpdater GetRightItemUpdater(Item item)
     {
         switch (item.Name)
         {
@@ -41,54 +41,11 @@ public class GildedRose
                 return new BaseItemUpdater();
         }
     }
-    private void UpdateStat(Item item)
+    private static void UpdateStat(Item item)
     {
-        // if (item.Name != SULFURAS)
-        // {
-        //     item.SellIn--;
-        // }
-
         var updater = GetRightItemUpdater(item);
         updater.Update(item);
-
-        // var qualityChange = 0;
-        // switch (item.Name)
-        // {
-        //     case AGED_BRIE:
-        //         qualityChange = item.IsExpired ? 2 : 1;
-        //         break;
-        //     case BACKSTAGE_PASS:
-        //         if (item.IsExpired) qualityChange = -item.Quality;
-        //         else if (item.SellIn < 5)
-        //             qualityChange = 3;
-        //         else if (item.SellIn < 10)
-        //             qualityChange = 2;
-        //         else
-        //             qualityChange = 1;
-        //         break;
-        //     case SULFURAS:
-        //         break;
-        //     case CONJURED_ITEM:
-        //         qualityChange = item.IsExpired ? -4 : -2;
-        //         break;
-        //     default:
-        //         qualityChange = item.IsExpired ? -2 : -1;
-        //         break;
-        // }
-        // IncreaseQuality(item, qualityChange);
     }
-
-    /// <summary>
-    /// Updates the quality of an item.
-    /// </summary>
-    /// <param name="item">The item to update.</param>
-    /// <param name="value">The value by which to update the quality. Default is 1.</param>
-    private static void IncreaseQuality(Item item, int value = 1)
-    {
-        if (value == 0) return;
-        item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
-    }
-
 
     class BaseItemUpdater
     {
@@ -134,7 +91,6 @@ public class GildedRose
             else
                 qualityChange = 1;
             IncreaseQuality(item, qualityChange);
-
         }
     }
     class AgedBrieUpdater : BaseItemUpdater

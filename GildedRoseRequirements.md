@@ -24,7 +24,6 @@ Pretty simple, right? Well this is where it gets interesting:
 	- `Quality` drops to `0` after the concert
 
 We have recently signed a supplier of conjured items. This requires an update to our system:
-
 - __"Conjured"__ items degrade in `Quality` twice as fast as normal items
 
 Feel free to make any changes to the `UpdateQuality` method and add any new code as long as everything

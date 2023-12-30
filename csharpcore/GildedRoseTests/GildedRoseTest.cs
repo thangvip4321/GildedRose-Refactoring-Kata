@@ -23,7 +23,7 @@ public class GildedRoseTest
     [Test]
     public void Test_Normal_Item_Degrade_Quality()
     {
-        var items = new List<Item> { new() { Name = "random stuff", SellIn = 3, Quality = 2 } };
+        var items = new List<Item> { new() { Name = "random stuff", SellIn = 4, Quality = 2 } };
         var app = new GildedRose(items);
         app.UpdateQuality();
         Assert.AreEqual(1, items[0].Quality);
@@ -31,6 +31,11 @@ public class GildedRoseTest
         Assert.AreEqual(0, items[0].Quality);
         app.UpdateQuality();
         Assert.AreEqual(0, items[0].Quality);
+        for (int i = 0; i < 20; i++)
+        {
+            app.UpdateQuality();
+        }
+            Assert.AreEqual(0,items[0].Quality);
     }
 
 

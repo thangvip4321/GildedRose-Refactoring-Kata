@@ -49,8 +49,6 @@ public class GildedRose
                 break;
             case SULFURAS:
                 break;
-            case CONJURED_ITEM:
-
             default:
                 qualityChange = IsExpired(item)? -2: -1;
                 break;
@@ -72,5 +70,8 @@ public class GildedRose
     {
         if (value == 0) return;
         item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
+    }
+    class ItemUpdater{
+        
     }
 }

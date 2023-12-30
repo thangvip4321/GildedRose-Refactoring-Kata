@@ -30,15 +30,13 @@ public class GildedRose
             item.SellIn = item.SellIn - 1;
         }
 
-        if (item.Name != AGED_BRIE && item.Name != BACKSTAGE_PASS && item.Name != SULFURAS)
+        switch (item.Name)
         {
-            DecreaseQuality(item);
-        }
-        else
-        {
-            AddQuality(item);
-            if (item.Name == BACKSTAGE_PASS)
-            {
+            case AGED_BRIE:
+                AddQuality(item);
+                break;
+            case BACKSTAGE_PASS:
+                AddQuality(item);
                 if (item.SellIn < 10)
                 {
                     AddQuality(item);
@@ -48,7 +46,12 @@ public class GildedRose
                 {
                     AddQuality(item);
                 }
-            }
+                break;
+            case SULFURAS:
+                break;
+            default:
+                DecreaseQuality(item);
+                break;
         }
 
 
@@ -66,10 +69,10 @@ public class GildedRose
             else if (item.Name == SULFURAS)
             {
             }
-            else{
-                 DecreaseQuality(item);
+            else
+            {
+                DecreaseQuality(item);
             }
-
         }
     }
 

@@ -25,39 +25,57 @@ public class GildedRose
         }
     }
 
-    private void UpdateStat(Item item)
+    private BaseItemUpdater GetRightItemUpdater(Item item)
     {
-        if (item.Name != SULFURAS)
-        {
-            item.SellIn--;
-        }
-
-
-        var qualityChange = 0;
         switch (item.Name)
         {
             case AGED_BRIE:
-                qualityChange = item.IsExpired ? 2 : 1;
-                break;
+                return new AgedBrieUpdater();
             case BACKSTAGE_PASS:
-                if (item.IsExpired) qualityChange = -item.Quality;
-                else if (item.SellIn < 5)
-                    qualityChange = 3;
-                else if (item.SellIn < 10)
-                    qualityChange = 2;
-                else
-                    qualityChange = 1;
-                break;
+                return new BackStageUpdater();
             case SULFURAS:
-                break;
+                return new SulfurasUpdater();
             case CONJURED_ITEM:
-                qualityChange = item.IsExpired ? -4 : -2;
-                break;
+                return new ConjuredItemUpdater();
             default:
-                qualityChange = item.IsExpired ? -2: -1;
-                break;
+                return new BaseItemUpdater();
         }
-        IncreaseQuality(item, qualityChange);
+    }
+    private void UpdateStat(Item item)
+    {
+        // if (item.Name != SULFURAS)
+        // {
+        //     item.SellIn--;
+        // }
+
+        var updater = GetRightItemUpdater(item);
+        updater.Update(item);
+
+        // var qualityChange = 0;
+        // switch (item.Name)
+        // {
+        //     case AGED_BRIE:
+        //         qualityChange = item.IsExpired ? 2 : 1;
+        //         break;
+        //     case BACKSTAGE_PASS:
+        //         if (item.IsExpired) qualityChange = -item.Quality;
+        //         else if (item.SellIn < 5)
+        //             qualityChange = 3;
+        //         else if (item.SellIn < 10)
+        //             qualityChange = 2;
+        //         else
+        //             qualityChange = 1;
+        //         break;
+        //     case SULFURAS:
+        //         break;
+        //     case CONJURED_ITEM:
+        //         qualityChange = item.IsExpired ? -4 : -2;
+        //         break;
+        //     default:
+        //         qualityChange = item.IsExpired ? -2 : -1;
+        //         break;
+        // }
+        // IncreaseQuality(item, qualityChange);
     }
 
     /// <summary>
@@ -71,15 +89,62 @@ public class GildedRose
         item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
     }
 
-    class ItemUpdater{
-        protected
-         void UpdateSellIn(Item item);
-         void UpdateQuality(Item item);
+
+    class BaseItemUpdater
+    {
+        protected void IncreaseQuality(Item item, int value = 1)
+        {
+            if (value == 0) return;
+            item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
+        }
+        public virtual void Update(Item item)
+        {
+            item.SellIn -= 1;
+            var qualityChange = item.IsExpired ? -2 : -1;
+            IncreaseQuality(item, qualityChange);
+        }
     }
-    class DefaultUpdater {
-        
-        void UpdateSellIn(Item item){
-            item.Quality
+    class SulfurasUpdater : BaseItemUpdater
+    {
+        public override void Update(Item item)
+        {
+            return;
+        }
+    }
+    class ConjuredItemUpdater : BaseItemUpdater
+    {
+        public override void Update(Item item)
+        {
+            item.SellIn--;
+            var qualityChange = item.IsExpired ? -4 : -2;
+            IncreaseQuality(item, qualityChange);
+        }
+    }
+    class BackStageUpdater : BaseItemUpdater
+    {
+        public override void Update(Item item)
+        {
+            item.SellIn--;
+            int qualityChange;
+            if (item.IsExpired) qualityChange = -item.Quality;
+            else if (item.SellIn < 5)
+                qualityChange = 3;
+            else if (item.SellIn < 10)
+                qualityChange = 2;
+            else
+                qualityChange = 1;
+            IncreaseQuality(item, qualityChange);
+
+        }
+    }
+    class AgedBrieUpdater : BaseItemUpdater
+    {
+        public override void Update(Item item)
+        {
+            item.SellIn--;
+            var qualityChange = item.IsExpired ? 2 : 1;
+            IncreaseQuality(item, qualityChange);
         }
     }
 }
+

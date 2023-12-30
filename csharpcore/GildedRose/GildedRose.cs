@@ -36,15 +36,13 @@ public class GildedRose
                 AddQuality(item);
                 break;
             case BACKSTAGE_PASS:
-                AddQuality(item);
-                if (item.SellIn < 10)
-                {
-                    AddQuality(item);
-                }
-
                 if (item.SellIn < 5)
                 {
-                    AddQuality(item);
+                    AddQuality(item,3);
+                }else if(item.SellIn<10){
+                    AddQuality(item,2);
+                }else{
+                    AddQuality(item,1);
                 }
                 break;
             case SULFURAS:

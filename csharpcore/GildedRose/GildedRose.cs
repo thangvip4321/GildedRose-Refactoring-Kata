@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GildedRoseKata;
 
@@ -33,22 +34,22 @@ public class GildedRose
         switch (item.Name)
         {
             case AGED_BRIE:
-                AddQuality(item);
+                UpdateQuality(item);
                 break;
             case BACKSTAGE_PASS:
                 if (item.SellIn < 5)
                 {
-                    AddQuality(item,3);
+                    UpdateQuality(item,3);
                 }else if(item.SellIn<10){
-                    AddQuality(item,2);
+                    UpdateQuality(item,2);
                 }else{
-                    AddQuality(item,1);
+                    UpdateQuality(item,1);
                 }
                 break;
             case SULFURAS:
                 break;
             default:
-                DecreaseQuality(item);
+                UpdateQuality(item,-1);
                 break;
         }
 
@@ -56,36 +57,25 @@ public class GildedRose
 
         if (item.SellIn < 0)
         {
-            if (item.Name == AGED_BRIE)
+            switch (item.Name)
             {
-                AddQuality(item);
-            }
-            else if (item.Name == BACKSTAGE_PASS)
-            {
-                item.Quality = 0;
-            }
-            else if (item.Name == SULFURAS)
-            {
-            }
-            else
-            {
-                DecreaseQuality(item);
+                case AGED_BRIE:
+                    UpdateQuality(item, 1);
+                    break;
+                case BACKSTAGE_PASS:
+                    item.Quality = 0;
+                    break;
+                case SULFURAS:
+                    break;
+                default:
+                    UpdateQuality(item, -1);
+                    break;
             }
         }
     }
 
-    private static void AddQuality(Item item, int value = 1)
+    private static void UpdateQuality(Item item, int value = 1)
     {
-        if (item.Quality < 50)
-        {
-            item.Quality = item.Quality + value;
-        }
-    }
-    private static void DecreaseQuality(Item item, int value = 1)
-    {
-        if (item.Quality > 0)
-        {
-            item.Quality = item.Quality - value;
-        }
+            item.Quality =  Math.Max(0, Math.Min(item.Quality+value, 50));
     }
 }

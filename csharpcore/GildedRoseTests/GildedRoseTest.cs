@@ -108,5 +108,16 @@ public class GildedRoseTest
         Assert.AreEqual(items[0].SellIn, -3);
         Assert.AreEqual(items[0].Quality, 0);
     }
+    [Test]
+    public void Test_Backstage_Passes_Never_pass_50()
+    {
+        var items = new List<Item> { new() { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 13, Quality = 30 } };
+        var app = new GildedRose(items);
+        for (int i = 0; i < 12; i++)
+        {
+            app.UpdateQuality();
+        }
+        Assert.AreEqual(items[0].Quality,50);
+    }
 
 }

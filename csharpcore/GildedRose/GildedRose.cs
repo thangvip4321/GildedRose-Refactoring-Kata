@@ -15,7 +15,7 @@ public class GildedRose
     private const string BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
     private const string SULFURAS = "Sulfuras, Hand of Ragnaros";
     private const string AGED_BRIE = "Aged Brie";
-    private const string CONJURED_ITEM = "Conjured mana Cake";
+    private const string CONJURED_ITEM = "Conjured Mana Cake";
 
     public void UpdateQuality()
     {
@@ -49,6 +49,9 @@ public class GildedRose
                 break;
             case SULFURAS:
                 break;
+            case CONJURED_ITEM:
+                qualityChange = IsExpired(item) ? -4 : -2;
+                break;
             default:
                 qualityChange = IsExpired(item)? -2: -1;
                 break;
@@ -71,7 +74,9 @@ public class GildedRose
         if (value == 0) return;
         item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
     }
-    class ItemUpdater{
-        
+
+    interface ItemUpdater{
+         void UpdateSellIn(Item item);
+         void UpdateQuality(Item item);
     }
 }

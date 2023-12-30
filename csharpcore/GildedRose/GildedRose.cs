@@ -15,6 +15,7 @@ public class GildedRose
     private const string BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
     private const string SULFURAS = "Sulfuras, Hand of Ragnaros";
     private const string AGED_BRIE = "Aged Brie";
+    private const string CONJURED_ITEM = "Conjured mana Cake";
 
     public void UpdateQuality()
     {
@@ -28,54 +29,48 @@ public class GildedRose
     {
         if (item.Name != SULFURAS)
         {
-            item.SellIn = item.SellIn - 1;
+            item.SellIn--;
         }
 
+        var qualityChange = 0;
         switch (item.Name)
         {
             case AGED_BRIE:
-                UpdateQuality(item);
+                qualityChange = IsExpired(item) ? 2 : 1;
                 break;
             case BACKSTAGE_PASS:
-                if (item.SellIn < 5)
-                {
-                    UpdateQuality(item,3);
-                }else if(item.SellIn<10){
-                    UpdateQuality(item,2);
-                }else{
-                    UpdateQuality(item,1);
-                }
+                if (IsExpired(item)) qualityChange = -item.Quality;
+                else if (item.SellIn < 5)
+                    qualityChange = 3;
+                else if (item.SellIn < 10)
+                    qualityChange = 2;
+                else
+                    qualityChange = 1;
                 break;
             case SULFURAS:
                 break;
+            case CONJURED_ITEM:
+
             default:
-                UpdateQuality(item,-1);
+                qualityChange = IsExpired(item)? -2: -1;
                 break;
         }
-
-
-
-        if (item.SellIn < 0)
-        {
-            switch (item.Name)
-            {
-                case AGED_BRIE:
-                    UpdateQuality(item, 1);
-                    break;
-                case BACKSTAGE_PASS:
-                    item.Quality = 0;
-                    break;
-                case SULFURAS:
-                    break;
-                default:
-                    UpdateQuality(item, -1);
-                    break;
-            }
-        }
+        IncreaseQuality(item, qualityChange);
     }
 
-    private static void UpdateQuality(Item item, int value = 1)
+    private static bool IsExpired(Item item)
     {
-            item.Quality =  Math.Max(0, Math.Min(item.Quality+value, 50));
+        return item.SellIn < 0;
+    }
+
+    /// <summary>
+    /// Updates the quality of an item.
+    /// </summary>
+    /// <param name="item">The item to update.</param>
+    /// <param name="value">The value by which to update the quality. Default is 1.</param>
+    private static void IncreaseQuality(Item item, int value = 1)
+    {
+        if (value == 0) return;
+        item.Quality = Math.Max(0, Math.Min(item.Quality + value, 50));
     }
 }
